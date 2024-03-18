@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
+    <!-- Include eel.js - note this file doesn't exist in the 'web' directory -->
+    <script type="text/javascript" src="/eel.js"></script>
+    <script async type="text/javascript" src="./js/main.js"></script>
+  </head>
+
+  <body>
+    <input
+        id="url"
+        placeholder="url pronote"
+        type="url"
+    />
+    <br />
+
+    <input
+        id="user"
+        placeholder="identifiant"
+        type="text"
+    />
+
+    <input
+        id="pass"
+        placeholder="mot de passe"
+        type="password"
+    />
+
+    <button
+        id="sub"
+    >
+        Connexion
+    </button>
+
+    <div id="userdata">
+        
+    </div>
+
+    <br />
+
+    <div id="err"></div>
+
+    <div id="userprofile-data">
+        <img id="userprofile-pdp" />
+        <div id="userprofile-content">
+            <p id="userprofile-name"></p>
+            <p id="userprofile-class-name"></p>
+            <p id="userprofile-establishment"></p>
+            <p id="userprofile-email"></p>
+        </div>
+    </div>
+  </body>
+</html>

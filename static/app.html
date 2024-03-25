@@ -2,53 +2,21 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="./css/main.css">
-    <!-- Include eel.js - note this file doesn't exist in the 'web' directory -->
     <script type="text/javascript" src="/eel.js"></script>
-    <script async type="text/javascript" src="./js/main.js"></script>
+    <script defer type="text/javascript" src="./js/alpine.js"></script>
+    <script async type="text/javascript" src="./js/interact.js"></script>
   </head>
 
-  <body>
-    <input
-        id="url"
-        placeholder="url pronote"
-        type="url"
-    />
-    <br />
+  <body
+    x-data="{ user: {} }"
+    class="main-app"
+  >
+    <p
+      x-text=" user ?
+      user['py/state'].__dict__.user['py/state'].__dict__.email : 'Chargement...'
+      "
+    ></p>
 
-    <input
-        id="user"
-        placeholder="identifiant"
-        type="text"
-    />
-
-    <input
-        id="pass"
-        placeholder="mot de passe"
-        type="password"
-    />
-
-    <button
-        id="sub"
-    >
-        Connexion
-    </button>
-
-    <div id="userdata">
-        
-    </div>
-
-    <br />
-
-    <div id="err"></div>
-
-    <div id="userprofile-data">
-        <img id="userprofile-pdp" />
-        <div id="userprofile-content">
-            <p id="userprofile-name"></p>
-            <p id="userprofile-class-name"></p>
-            <p id="userprofile-establishment"></p>
-            <p id="userprofile-email"></p>
-        </div>
-    </div>
+    <script async type="text/javascript" src="./js/main.js"></script>
   </body>
 </html>

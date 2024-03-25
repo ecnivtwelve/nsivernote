@@ -1,43 +1,40 @@
 import eel
-import lxml
-import json
-import pronotepy
-from pronotepy.ent import ac_rennes
+import jsonpickle
+from supabase import create_client, Client
 
+SUPABASE_URL = "https://cjxferfvtfodvzonnqyk.supabase.co"
+API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqeGZlcmZ2dGZvZHZ6b25ucXlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTEzNzI0MDQsImV4cCI6MjAyNjk0ODQwNH0.Yo_cwzRX5y_wQH08aQ57NnKw_KXgHajvfQ1Qk_Q6y_Q"
+
+supabase = create_client(SUPABASE_URL, API_KEY)
 eel.init('static')
 
-client = None
+@eel.expose
+def login_user(user, passwd):
+    try:
+        data = supabase.auth.sign_in_with_password({"email": user, "password": passwd})
+        print(data)
+        eel.python_console('User logged in successfully!')
+        eel.redirect('app.html')
+        eel.python_console(jsonpickle.encode(data))
+    except Exception as e:
+        eel.python_console(str(e))
 
 @eel.expose
-def login_ttc(user, passwd, url):
-    try :
-        if(("toutatice.fr" in url) and ("login=true" not in url)):
-            client = pronotepy.Client(url,
-                    username=user,
-                    password=passwd,
-                    ent=ac_rennes)
-        else:
-            client = pronotepy.Client(url,
-                    username=user,
-                    password=passwd)
-        if client.logged_in:
-            info = client.info
-            data = {
-                "logged_in": True,
-                "name": info.name,
-                "establishment": info.establishment,
-                "class_name": info.class_name,
-                "ine_number": info.ine_number,
-                "phone": info.phone,
-                "email": info.email,
-                "address": info.address,
-                "profile_picture": info.profile_picture.url if info.profile_picture else None,
-            }
-            eel.ret_user_data(data)
-        else:
-            eel.ret_user_data({"logged_in": False, "error": "Login failed"})
+def register_user(user, passwd):
+    try:
+        data = supabase.auth.sign_up({"email": user, "password": passwd})
+        eel.python_console('User registered successfully!')
     except Exception as e:
-        eel.ret_user_data({"logged_in": False, "error": str(e)})
+        eel.python_console(str(e))
+
+@eel.expose
+def get_user():
+    try :
+        print('Getting user...')
+        user = supabase.auth.get_user()
+        eel.set_user(jsonpickle.encode(user))
+    except Exception as e:
+        eel.redirect('login.html')
     
 
-eel.start('app.html', mode='edge')
+eel.start('login.html', mode='edge')

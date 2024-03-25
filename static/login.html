@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="./css/login.css">
+    <script type="text/javascript" src="/eel.js"></script>
+    <script defer type="text/javascript" src="./js/alpine.js"></script>
+    <script async type="text/javascript" src="./js/login.js"></script>
+    <script async type="text/javascript" src="./js/interact.js"></script>
+  </head>
+
+  <body
+    x-data="{ login: true }"
+    class="login-app"
+  >
+    <div class="login-ui">
+        <div class="select">
+            <div @click="login = true" :class="{ 'active': login }">Se connecter</div>
+            <div @click="login = false" :class="{ 'active': !login }">S'inscrire</div>
+        </div>
+        <div class="login-page" x-show="login">
+            <div class="login-form">
+                <div class="login-group">
+                    <label for="email">Adresse e-mail</label>
+                    <input type="email" id="login-email" name="email" placeholder="Email" required>
+                </div>
+
+                <div class="login-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="login-password" name="password" placeholder="Mot de passe" required>
+                </div>
+
+                <button
+                    class="login-button"
+                    @click="loginUser"
+                >Se connecter</button>
+
+                <div class="login-group">
+                    <label for="password">Retour Python</label>
+                    <textarea id="python-login" name="python" placeholder="Python" readonly></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="login-page" x-show="!login">
+            <div class="login-form">
+                <div class="login-group">
+                    <label for="email">Adresse e-mail</label>
+                    <input type="email" id="signup-email" name="email" placeholder="Email" required>
+                </div>
+
+                <div class="login-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="signup-password" name="password" placeholder="Mot de passe" required>
+                    <input type="password" id="signup-password-confirm" name="password" placeholder="Confirmation du mot de passe" required>
+                </div>
+
+                <button
+                    class="login-button"
+                    @click="signupUser"
+                >Créer un compte</button>
+
+                <div class="login-group">
+                    <label for="password">Retour Python</label>
+                    <textarea id="python-signup" name="python" placeholder="Python" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

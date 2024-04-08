@@ -2,6 +2,7 @@ function loginUser() {
     var email = document.getElementById("login-email").value;
     var password = document.getElementById("login-password").value;
 
+    mount('loading', true);
     eel.login_user(email, password);
 }
 
@@ -11,29 +12,40 @@ function signupUser() {
     var password2 = document.getElementById("signup-password-confirm").value;
 
     if (email.trim() == "" || password.trim() == "" || password2.trim() == "") {
-        alert("Please fill in all fields.");
+        mount('signupError', "Merci de remplir tous les champs.");
         return;
     }
 
     if (password != password2) {
-        alert("Passwords do not match.");
+        mount('signupError', "Les mots de passe ne correspondent pas.");
         return;
     }
+
+    mount('loading', true);
 
     eel.register_user(email, password);
 }
 
-function python_console(text) {
-    let login_console = document.getElementById("python-login");
-    let signup_console = document.getElementById("python-signup");
+function login_error(text) {
+    mount('loginError', text);
+    mount('loading', false);
 
-    // add text to a new line in both textareas
-    login_console.value += text + "\n";
-    signup_console.value += text + "\n";
-
-    // scroll to the bottom
-    login_console.scrollTop = login_console.scrollHeight;
-    signup_console.scrollTop = signup_console.scrollHeight;
+    if (text.trim() == 'Invalid login credentials') {
+        mount('loginError', "Identifiants incorrects.");
+    }
 }
 
-eel.expose(python_console);
+function signup_error(text) {
+    mount('signupError', text);
+    mount('loading', false);
+}
+
+function signup_success() {
+    mount('signupSuccess', true);
+    mount('signupError', null);
+    mount('loading', false);
+}
+
+eel.expose(login_error);
+eel.expose(signup_error);
+eel.expose(signup_success);

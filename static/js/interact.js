@@ -12,6 +12,11 @@ function redirect(url) {
     window.location.href = url;
 }
 
+const mount = (name, data) => {
+    const e = new CustomEvent('mounted', { detail: { name, data } });
+    document.body.dispatchEvent(e);
+};
+
 eel.expose(set_element_text);
 eel.expose(set_element_value);
 eel.expose(redirect);

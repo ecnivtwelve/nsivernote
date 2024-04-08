@@ -13,19 +13,17 @@ def login_user(user, passwd):
     try:
         data = supabase.auth.sign_in_with_password({"email": user, "password": passwd})
         print(data)
-        eel.python_console('User logged in successfully!')
         eel.redirect('app.html')
-        eel.python_console(jsonpickle.encode(data))
     except Exception as e:
-        eel.python_console(str(e))
+        eel.login_error(str(e))
 
 @eel.expose
 def register_user(user, passwd):
     try:
         data = supabase.auth.sign_up({"email": user, "password": passwd})
-        eel.python_console('User registered successfully!')
+        eel.signup_success()
     except Exception as e:
-        eel.python_console(str(e))
+        eel.signup_error(str(e))
 
 @eel.expose
 def get_user():
@@ -37,4 +35,4 @@ def get_user():
         eel.redirect('login.html')
     
 
-eel.start('login.html', mode='edge')
+eel.start('login.html', cmdline_args=['--disable-lcd-text'], size=(950, 750), position=(20, 20))

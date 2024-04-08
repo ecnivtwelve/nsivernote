@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="./css/main.css">
     <link rel="stylesheet" type="text/css" href="./css/login.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
     <script type="text/javascript" src="/eel.js"></script>
     <script defer type="text/javascript" src="./js/alpine.js"></script>
     <script async type="text/javascript" src="./js/login.js"></script>
     <script async type="text/javascript" src="./js/interact.js"></script>
+
+    <title>nsicord - développement</title>
   </head>
 
   <body
-    x-data="{ login: true }"
+    x-data="{ state: {
+        loading: false,
+        loginError: null,
+        signupError: null,
+        signupSuccess: false,
+    }, login: true }"
+    @mounted="state[$event.detail.name] = $event.detail.data"
     class="login-app"
   >
     <div class="login-ui">
@@ -19,51 +31,76 @@
         </div>
         <div class="login-page" x-show="login">
             <div class="login-form">
+                <div class="login-error" x-show="state.loginError">
+                    <span class="material-symbols-outlined">error</span>
+                    <div class="login-error-data">
+                        <p class="login-error-title">Impossible de se connecter</p>
+                        <p class="login-error-text" x-text="state.loginError"></p>
+                    </div>
+                </div>
+                
                 <div class="login-group">
                     <label for="email">Adresse e-mail</label>
-                    <input type="email" id="login-email" name="email" placeholder="Email" required>
+                    <input type="email" id="login-email" name="email" placeholder="Email" required onkeydown="if(event.keyCode == 13) loginUser()">
                 </div>
 
                 <div class="login-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" id="login-password" name="password" placeholder="Mot de passe" required>
+                    <input type="password" id="login-password" name="password" placeholder="Mot de passe" required onkeydown="if(event.keyCode == 13) loginUser()">
                 </div>
 
                 <button
                     class="login-button"
                     @click="loginUser"
-                >Se connecter</button>
-
-                <div class="login-group">
-                    <label for="password">Retour Python</label>
-                    <textarea id="python-login" name="python" placeholder="Python" readonly></textarea>
-                </div>
+                >
+                    <div class="spinner spinner-light" x-show="state.loading"></div>
+                    <p class="btn-text">Se connecter</p> 
+                </button>
             </div>
         </div>
         <div class="login-page" x-show="!login">
             <div class="login-form">
+                <div class="login-error" x-show="state.signupError">
+                    <span class="material-symbols-outlined">error</span>
+                    <div class="login-error-data">
+                        <p class="login-error-title">Impossible de créer un compte</p>
+                        <p class="login-error-text" x-text="state.signupError"></p>
+                    </div>
+                </div>
+
+                <div class="login-error login-error-success" x-show="state.signupSuccess">
+                    <span class="material-symbols-outlined">check</span>
+                    <div class="login-error-data">
+                        <p class="login-error-title">Profil créé !</p>
+                        <p class="login-error-text">Merci de vous connecter a votre compte</p>
+                    </div>
+                </div>
+
                 <div class="login-group">
                     <label for="email">Adresse e-mail</label>
-                    <input type="email" id="signup-email" name="email" placeholder="Email" required>
+                    <input type="email" id="signup-email" name="email" placeholder="Email" required onkeydown="if(event.keyCode == 13) signupUser()">
                 </div>
 
                 <div class="login-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" id="signup-password" name="password" placeholder="Mot de passe" required>
-                    <input type="password" id="signup-password-confirm" name="password" placeholder="Confirmation du mot de passe" required>
+                    <input type="password" id="signup-password" name="password" placeholder="Mot de passe" required onkeydown="if(event.keyCode == 13) signupUser()">
+                    <input type="password" id="signup-password-confirm" name="password" placeholder="Confirmation du mot de passe" required onkeydown="if(event.keyCode == 13) signupUser()">
                 </div>
 
                 <button
                     class="login-button"
                     @click="signupUser"
-                >Créer un compte</button>
-
-                <div class="login-group">
-                    <label for="password">Retour Python</label>
-                    <textarea id="python-signup" name="python" placeholder="Python" readonly></textarea>
-                </div>
+                >
+                    <div class="spinner spinner-light" x-show="state.loading"></div>
+                    <p class="btn-text">Créer un compte</p> 
+                </button>
             </div>
         </div>
     </div>
+
+    <p class="login-conds">
+        Nsicord version 1.0.0 - (C) Vince Linise 2024<br/>
+        Ceci est une version de développement
+    </p>
   </body>
 </html>

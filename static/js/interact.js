@@ -17,6 +17,11 @@ const mount = (name, data) => {
     document.body.dispatchEvent(e);
 };
 
+function send_error(text) {
+    mount('error', text);
+    console.error('[EEL_NSICORD] : ', text);
+}
+
 eel.expose(set_element_text);
 eel.expose(set_element_value);
 eel.expose(redirect);

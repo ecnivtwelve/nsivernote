@@ -15,9 +15,19 @@
   >
     <p
       x-text=" state.user ? 'Bonjour, ' + 
-      state.user['py/state'].__dict__.user['py/state'].__dict__.email + '!' : 'Chargement...'
+      state.user.username : 'Chargement...'
       "
     ></p>
+
+    <div>
+      <input
+        placeholder="Nom d'utilisateur"
+        x-model="state.user.username"
+      />
+      <button
+        @click="change_username(state.user.username)"
+      > Changer de nom </button>
+    </div>
 
     <script async type="text/javascript" src="./js/main.js"></script>
   </body>

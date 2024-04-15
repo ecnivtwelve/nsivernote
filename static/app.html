@@ -2,31 +2,114 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="./css/main.css">
+    <link rel="stylesheet" type="text/css" href="./css/app.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
     <script type="text/javascript" src="/eel.js"></script>
     <script defer type="text/javascript" src="./js/alpine.js"></script>
     <script async type="text/javascript" src="./js/interact.js"></script>
-    <title>nsicord - développement</title>
+
+    <link rel="icon" href="./assets/favicon.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="./assets/favicon-4x.png" type="image/png" sizes="192x192">
+    <title>Nsicord</title>
   </head>
 
   <body
-    x-data="{state: {}}"
+    x-data="
+      {
+        state: {},
+        currentTab: 1,
+      }
+    "
     @mounted="state[$event.detail.name] = $event.detail.data"
     class="main-app"
   >
-    <p
-      x-text=" state.user ? 'Bonjour, ' + 
-      state.user.username : 'Chargement...'
-      "
-    ></p>
+    <div class="menu">
+      <div class="menu-list">
+        <div class="menu-tab-group-title">
+          <p>Tableaux</p>
+        </div>
+        <div x-on:click="currentTab = 1" :class="{ 'active': currentTab === 1 }" class="menu-item">
+          <span class="material-symbols-outlined">
+            format_list_bulleted
+          </span>
+          <p>Mes listes</p>
+        </div>
+        <div x-on:click="currentTab = 2" :class="{ 'active': currentTab === 2 }" class="menu-item">
+          <span class="material-symbols-outlined">
+            group
+          </span>
+          <p>Partagé avec moi</p>
+        </div>
+        <div class="menu-tab-group-title">
+          <p>Mon profil</p>
+        </div>
+        <div x-on:click="currentTab = 3" :class="{ 'active': currentTab === 3 }" class="menu-item">
+          <span class="material-symbols-outlined">
+            account_circle
+          </span>
+          <p
+          x-text=" state.user ?
+          state.user.username : 'Mon profil'
+          "
+        ></p>
+        </div>
+      </div>
+    </div>
+    <div class="app">
+      <div class="tab tab1" x-show="currentTab === 1">
+        <h3
+          class="tab-over-title"
+          x-text=" state.user ? 'Bonjour, ' + 
+          state.user.username + ' !' : 'Bonjour !' "
+        ></h2>
+        <h2 class="tab-title">
+          Mes listes
+        </h2>
 
-    <div>
-      <input
-        placeholder="Nom d'utilisateur"
-        x-model="state.user.username"
-      />
-      <button
-        @click="change_username(state.user.username)"
-      > Changer de nom </button>
+        <div class="fab fab-new">
+          <span class="material-symbols-outlined">
+            add
+          </span>
+          <p>
+            Nouvelle liste
+          </p>
+        </div>
+      </div>
+
+      <div class="tab tab2" x-show="currentTab === 2">
+        <h3
+          class="tab-over-title"
+          x-text=" state.user ? 'Bonjour, ' + 
+          state.user.username + ' !' : 'Bonjour !' "
+        ></h2>
+        <h2 class="tab-title">
+          Partagé avec moi
+        </h2>
+
+      </div>
+
+      <div class="tab tab3" x-show="currentTab === 3">
+        <h3
+          class="tab-over-title"
+          x-text=" state.user ? 'Bonjour, ' + 
+          state.user.username + ' !' : 'Bonjour !' "
+        ></h2>
+        <h2 class="tab-title">
+          Mon compte
+        </h2>
+
+        <div>
+          <input
+            placeholder="Nom d'utilisateur"
+            x-model="state.user.username"
+          />
+          <button
+            @click="change_username(state.user.username)"
+          > Changer de nom </button>
+        </div>
+      </div>
     </div>
 
     <script async type="text/javascript" src="./js/main.js"></script>

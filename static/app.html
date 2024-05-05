@@ -18,13 +18,70 @@
   <body
     x-data="
       {
-        state: {},
+        state: {
+          user: {},
+          tasks: [],
+          user_loaded: false,
+          tasks_loaded: false,
+        },
         currentTab: 1,
+        show_username_modal: false,
+        new_username: '',
       }
     "
     @mounted="state[$event.detail.name] = $event.detail.data"
     class="main-app"
   >
+    <div class="modal username-modal" x-show="show_username_modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title">Changer de nom d'utilisateur</p>
+          <span
+            class="material-symbols-outlined modal-close"
+            @click="show_username_modal = false"
+          >
+            close
+          </span>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description">
+            Entrez le nouveau nom d'utilisateur que vous souhaitez utiliser.
+          </p>
+
+          <input
+            placeholder="Nom d'utilisateur"
+            x-model="new_username"
+            class="modal-input"
+          />
+        </div>
+        <div class="modal-footer">
+          <button
+            class="modal-button modal-button-secondary"
+            @click="() => {
+              show_username_modal = false;
+            }"
+          >
+            Annuler
+          </button>
+          <button
+            class="modal-button"
+            @click="() => {
+              if (new_username.trim().length > 0) {
+                show_username_modal = false;
+                state.user.username = new_username;
+                change_username(new_username);
+              }
+              else {
+                alert('Le nom d\'utilisateur ne peut pas être vide.');
+              }
+            }"
+          >
+            Enregistrer
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="menu">
       <div class="menu-list">
         <div class="menu-tab-group-title">
@@ -46,14 +103,15 @@
           <p>Mon profil</p>
         </div>
         <div x-on:click="currentTab = 3" :class="{ 'active': currentTab === 3 }" class="menu-item">
-          <span class="material-symbols-outlined">
+          <span x-show="state.user.username" class="material-symbols-outlined">
             account_circle
           </span>
+          <div x-show="!state.user.username" class="spinner"></div>
           <p
-          x-text=" state.user ?
+          x-text=" state.user.username ?
           state.user.username : 'Mon profil'
           "
-        ></p>
+          ></p>
         </div>
       </div>
     </div>
@@ -67,6 +125,50 @@
         <h2 class="tab-title">
           Mes listes
         </h2>
+
+        <div class="ui-loading" x-show="!state.tasks_loaded || !state.user_loaded">
+          <div class="spinner"></div>
+          <p class="spinner-text">Chargement...</p>
+        </div>
+
+        <div class="list-header" x-show="state.tasks.length > 0">
+          <p>Listes liées à votre profil</p>
+        </div>
+        <template x-if="state.tasks.length > 0">
+          <div class="list tasks-list">
+            <template x-for="(task, index) in state.tasks" :key="task.id">
+              <div class="list-item" x-if="task.name">
+                <div class="list-leading">
+                  <span class="material-symbols-outlined">
+                    format_list_bulleted
+                  </span>
+                </div>
+                <div class="list-content">
+                  <p
+                    class="list-title"
+                    x-text="task.name"
+                  ></p>
+                  <p
+                    class="list-description"
+                    x-text="task.json.length > 0 ? task.json.length + ' tâches' : 'Aucune tâche'"
+                  ></p>
+                </div>
+                <div class="list-actions">
+                  <div class="button">
+                    <span class="material-symbols-outlined">
+                      edit
+                    </span>
+                  </div>
+                  <div class="button">
+                    <span class="material-symbols-outlined">
+                      delete
+                    </span>
+                  </div>           
+                </div>
+              </div>
+            </template>
+          </div>
+        </template>
 
         <div class="fab fab-new">
           <span class="material-symbols-outlined">
@@ -100,14 +202,53 @@
           Mon compte
         </h2>
 
-        <div>
-          <input
-            placeholder="Nom d'utilisateur"
-            x-model="state.user.username"
-          />
-          <button
-            @click="change_username(state.user.username)"
-          > Changer de nom </button>
+        <div class="list-header">
+          <p>Informations personnelles</p>
+        </div>
+        <div class="list">
+          <div class="list-item">
+            <div class="list-leading">
+              <span class="material-symbols-outlined">
+                account_circle
+              </span>
+            </div>
+            <div class="list-content">
+              <p class="list-title">Nom d'utilisateur</p>
+              <p class="list-description" x-text="state.user.username"></p>
+            </div>
+            <div class="list-actions">
+              <div class="button"
+                @click="() => {
+                  new_username = state.user.username;
+                  show_username_modal = true;
+                }"
+              >
+                <span class="material-symbols-outlined">
+                  edit
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="list-header">
+          <p>A propos</p>
+        </div>
+        <div class="list">
+          <div class="list-item">
+            <div class="list-content">
+              <p class="list-description">
+                version 1.0.0
+              </p>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="list-content">
+              <p class="list-description">
+                Développé par Vince Linise
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -31,6 +31,7 @@
     width: 250px;
     overflow: hidden;
     padding: 6px 18px;
+    margin-top: 6px;
 }
 
 .menu-tab-group-title p {
@@ -121,7 +122,6 @@
     font-size: 18px;
     font-weight: 700;
     color: #000000;
-    margin-bottom: 20px;
 }
 
 .tab-over-title {
@@ -185,4 +185,248 @@
     font-size: 14px;
     font-weight: 500;
     margin-top: -2px;
+}
+
+.ui-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.ui-loading p {
+    font-weight: 400;
+}
+
+.list {
+    background-color: #ffffff;
+    margin-right: 32px;
+    border-radius: 5px;
+    border: 1px solid #00000031;
+    box-shadow: 0px 1px 3px #00000021;
+    animation: list 0.15s ease-out;
+}
+
+@keyframes list {
+    0% {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.list-item {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid #00000031;
+}
+
+.list-item:hover {
+    background-color: #0000000d;
+}
+
+.list-item:active {
+    background-color: #0000001a;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-content {
+    flex: 1;
+}
+
+.list-content .list-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #000000;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.list-content .list-description {
+    font-size: 14px;
+    font-weight: 400;
+    color: #00000099;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.list-actions {
+    display: flex;
+    gap: 0px;
+    align-items: center;
+}
+
+.list-actions .button {
+    width: 38px;
+    height: 38px;
+    border-radius: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.list-actions .button:hover {
+    background-color: #0000001c;
+    cursor: pointer;
+}
+
+.list-actions .button:active {
+    background-color: #0000002e;
+}
+
+.list-header {
+    height: 42px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 6px;
+    animation: list 0.15s ease-out;
+}
+
+.list-header p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #00000055;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #00000061;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: modal-bg 0.15s ease-out;
+}
+
+@keyframes modal-bg {
+    0% {
+        background-color: #00000000;
+    }
+}
+
+.modal-content {
+    width: 400px;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #00000041;
+    box-shadow: 0px 2px 4px #00000041;
+    animation: modal 0.15s ease-out;
+}
+
+@keyframes modal {
+    0% {
+        transform: scale(0.9) translateY(10px);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-content .modal-header {
+    padding: 12px 14px;
+    border-bottom: 1px solid #00000031;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-content .modal-header p {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.modal-close {
+    font-size: 20px;
+    opacity: 0.5;
+}
+
+.modal-close:hover {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.modal-content .modal-body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-content .modal-body .modal-description {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+}
+
+.modal-content .modal-body .modal-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #00000031;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.modal-content .modal-body .modal-input:focus {
+    outline: 3px solid #518f1b92;
+    border: 1px solid #518f1b;
+}
+
+
+.modal-content .modal-footer {
+    padding: 12px 14px;
+    padding-top: 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-content .modal-footer .modal-button {
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    background-color: #518f1b;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.modal-content .modal-footer .modal-button:hover {
+    background-color: #3f6e15;
+    cursor: pointer;
+}
+
+.modal-content .modal-footer .modal-button-secondary {
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    background-color: #0000001c;
+    color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.modal-content .modal-footer .modal-button-secondary:hover {
+    background-color: #0000002e;
+    cursor: pointer;
 }

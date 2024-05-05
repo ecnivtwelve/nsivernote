@@ -11,6 +11,60 @@ supabase = create_client(SUPABASE_URL, API_KEY)
 # Initialisation de Eel
 eel.init('static')
 
+class TaskList:
+    def __init__(self):
+        """
+        Crée un objet TaskList.
+        Sauvegarde les tâches de l'utilisateur dans self.tasks.
+        """
+        # Variables de données
+        self.id = ''
+        self.title = ''
+        self.description = ''
+        self.tasks = ''
+        self.identifier = ''
+        self.share = False
+        self.creator = ''
+
+    def get_tasks(self, req_id):
+        """
+        Récupère les tâches de l'utilisateur dans la base de données.
+        """
+        if self.id == '':
+            # Si l'utilisateur n'est pas connecté
+            return None
+        # Requête base de données (SELECT * FROM tasks WHERE id = self.id)
+        tasks = supabase.table('tasks').select("*").eq('id', req_id).execute()
+        # Retourne les tâches de l'utilisateur
+
+        self.id = tasks.data[0]['id']
+        self.title = tasks.data[0]['title']
+        self.description = tasks.data[0]['description']
+        self.tasks = tasks.data[0]['tasks']
+        self.identifier = tasks.data[0]['identifier']
+        self.share = tasks.data[0]['share']
+        self.creator = tasks.data[0]['creator']
+
+    def __str__(self):
+        """
+        Retourne les données de l'utilisateur sous forme de JSON.
+        """
+        if self.id == '':
+            # Si l'utilisateur n'est pas connecté
+            return None
+        # Formatage des données de l'utilisateur en JSON
+        data = {
+            'id' : self.id,
+            'title' : self.title,
+            'description' : self.description,
+            'tasks' : self.tasks,
+            'identifier' : self.identifier,
+            'share' : self.share,
+            'creator' : self.creator,
+        }
+        # Retourne les données sous forme de JSON
+        return jsonpickle.encode(data)
+
 class User:
     def __init__(self, user, passwd):
         """
@@ -122,6 +176,22 @@ class User:
             # En cas d'erreur, renvoie un message d'erreur
             eel.send_error(str(e))
 
+    def get_tasks(self):
+        """
+        Récupère les tâches de l'utilisateur dans la base de données.
+        """
+        if self.supabase_obj is None:
+            # Si l'utilisateur n'est pas connecté
+            return None
+        # Requête base de données (SELECT * FROM tasks WHERE creator = self.supabase_obj.user.id)
+        tasks = supabase.table('tasks').select("*").eq('creator', self.supabase_obj.user.id).execute()
+
+        print(self.supabase_obj.user.id)
+        print(tasks)
+
+        # Retourne les tâches de l'utilisateur
+        return tasks.data
+
 # Variable de l'utilisateur actuel connecté (objet User)
 currentUser = None
 
@@ -168,6 +238,29 @@ def change_username(new_username):
     global currentUser
     # Met à jour le nom d'utilisateur
     currentUser.update({'username': new_username})
+
+@eel.expose
+def get_tasks():
+    """
+    (JS) Récupère les tâches de l'utilisateur actuel.
+    """
+    # Utilisation de la variable globale currentUser
+    global currentUser
+    # Retourne les tâches de l'utilisateur actuel
+    tasks = currentUser.get_tasks()
+    eel.set_tasks(jsonpickle.encode(tasks))
+
+@eel.expose
+def get_task_list(req_id):
+    """
+    (JS) Récupère les tâches de l'utilisateur actuel.
+    """
+    # Utilisation de la variable globale currentUser
+    global currentUser
+    # Retourne les tâches de l'utilisateur actuel
+    tasks = TaskList()
+    tasks.get_tasks(req_id)
+    eel.set_task_list(str(tasks))
 
 # Lancement de l'application avec Eel
 eel.start('login.html', cmdline_args=['--disable-lcd-text'], size=(950, 680), position=(20, 20))

@@ -1,6 +1,4 @@
-function get_user() {
-    eel.get_user();
-}
+let user = {};
 
 function change_username(name) {
     console.log('js_chg_nm', name);
@@ -13,8 +11,21 @@ function set_user(data) {
 
     // body.__x.$data.user = user;
     mount('user', user);
+    mount('user_loaded', true);
 }
 eel.expose(set_user);
 
+function set_tasks(data) {
+    console.log(JSON.parse(data));
+    tasks = JSON.parse(data);
 
-get_user();
+    console.log(tasks);
+
+    // body.__x.$data.tasks = tasks;
+    mount('tasks', tasks);
+    mount('tasks_loaded', true);
+}
+eel.expose(set_tasks);
+
+eel.get_user();
+eel.get_tasks();

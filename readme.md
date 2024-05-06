@@ -64,3 +64,6 @@
 
 ### Semaine 8
 #### 06 mai 2024
+- Améliorations sur l'interface graphique
+    - Amélioration de l'accessibilité des couleurs
+- Changement de nom et d'assets (icônes...)

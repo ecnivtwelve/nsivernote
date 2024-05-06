@@ -41,7 +41,7 @@
 }
 
 .select > div.active {
-    border-bottom: #0066FF 2px solid;
+    border-bottom: #518f1b 2px solid;
 }
 
 .login-form {
@@ -86,17 +86,17 @@
 }
 
 .login-group > input:focus {
-    outline: 3px solid #0066FF44;
-    border: 1px solid #0066FF;
+    outline: 3px solid #518f1b44;
+    border: 1px solid #518f1b;
 }
 
 .login-button {
     flex: 1;
     padding: 7px var(--base-text-sm);
-    border: 1px solid #0066FF;
+    border: 1px solid #518f1b;
     border-radius: 5px;
     font-size: var(--base-text);
-    background-color: #0066FF;
+    background-color: #518f1b;
     color: #fff;
     cursor: pointer;
     font-weight: 500;

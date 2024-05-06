@@ -49,3 +49,18 @@
     - Icônes et textes
     - Changements d'onglets
     - Boutons dynamiques
+
+### Semaine 6
+- *(rien)*
+
+### Semaine 7
+#### 05 mai 2024
+- Améliorations sur l'interface graphique
+    - Ajout des modals de changement de nom
+    - Intégration de l'affichage des listes (avec icônes et boutons)
+- Fix de l'inscription sur la base de données (ça marchait plus)
+    - Problème : clés primaires qui empêchaient la création de compte sur la BDD Supabase
+- Ajout des listes (récupération depuis BDD)
+
+### Semaine 8
+#### 06 mai 2024

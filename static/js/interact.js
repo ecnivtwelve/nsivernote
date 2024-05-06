@@ -19,7 +19,7 @@ const mount = (name, data) => {
 
 function send_error(text) {
     mount('error', text);
-    console.error('[EEL_NSICORD] : ', text);
+    console.error('[EEL_Nsivernote] : ', text);
 }
 
 eel.expose(set_element_text);

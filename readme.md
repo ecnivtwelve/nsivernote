@@ -23,6 +23,7 @@
 #### 25 mars 2024
 - Ajout de la connexion utilisateur via la base de données
     - Intégration de la base de données open-source asynchrone `supabase` (sur des serveurs distants hébergés par Supabase)
+    - Utilisation de `jsonpickle` pour encoder / décoder les données au format JSON.
 - Ajout de la création de profil
 
 ### Semaine 3
@@ -64,6 +65,14 @@
 
 ### Semaine 8
 #### 06 mai 2024
-- Améliorations sur l'interface graphique
-    - Amélioration de l'accessibilité des couleurs
-- Changement de nom et d'assets (icônes...)
+- Réparation de bugs de connexion liés à Supabase
+- Amélioration de l'interface graphique
+- Nouveau nom et charte visuelle (création du logo, etc...)
+
+### Semaine 9
+#### 13 mai 2024
+- Ajout des boîtes de dialogue pour créer une liste
+- Ajout de la gestion complète des listes (création, renommage, suppression)
+- Amélioration de l'interface (chargements, toasts, etc...)
+- Fix d'un bug avec le scroll vertical sur l'interface
+- Ajout d'un grand nombre d'animations sur l'interface

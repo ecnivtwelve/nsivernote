@@ -107,11 +107,11 @@
 }
 
 .login-button:hover {
-    background-color: #0055FF;
+    background-color: #437516;
 }
 
 .login-button:active {
-    background-color: #0044FF;
+    background-color: #365e12;
 }
 
 #python-login, #python-signup {

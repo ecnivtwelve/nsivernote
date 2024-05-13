@@ -21,17 +21,40 @@
         state: {
           user: {},
           tasks: [],
+          is_loading: false,
           user_loaded: false,
           tasks_loaded: false,
+          toast: {
+            visible: false,
+            icon: 'info',
+            text: '',
+            type: ''
+          },
+          ui_loading_done: false,
         },
         currentTab: 1,
         show_username_modal: false,
         new_username: '',
+        show_new_list_modal: false,
+        new_list_name: '',
+        rename_list_name: '',
+        current_editing_list_id: null,
+        show_edit_list_modal: false,
+        show_delete_list_modal: false,
       }
     "
     @mounted="state[$event.detail.name] = $event.detail.data"
     class="main-app"
   >
+    <div :class="{ 'toast': true, 'visible': state.toast.visible, 'warning': state.toast.type === 'warning', 'success': state.toast.type === 'success', 'danger': state.toast.type === 'danger' }">
+      <span class="material-symbols-outlined toast-icon" x-text="state.toast.icon"></span>
+      <p x-text="state.toast.text"></p>
+    </div>
+
+    <div :class="{ 'ui-loading-bar': true, 'visible': state.is_loading }">
+      <div class="ui-loading-inner"></div>
+    </div>
+
     <div class="modal username-modal" x-show="show_username_modal">
       <div class="modal-content">
         <div class="modal-header">
@@ -70,13 +93,205 @@
                 show_username_modal = false;
                 state.user.username = new_username;
                 change_username(new_username);
+
+                state.toast.icon = 'check';
+                state.toast.text = 'Nom d\'utilisateur modifié.';
+                state.toast.visible = false;
+                state.toast.type = 'success';
+                setTimeout(() => {
+                  state.toast.visible = true;
+                }, 50);
               }
               else {
-                alert('Le nom d\'utilisateur ne peut pas être vide.');
+                state.toast.icon = 'error';
+                state.toast.text = 'Le nom d\'utilisateur ne peut pas être vide.';
+                state.toast.visible = false;
+                state.toast.type = 'danger';
+                setTimeout(() => {
+                  state.toast.visible = true;
+                }, 50);
               }
             }"
           >
             Enregistrer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal new_list-modal" x-show="show_new_list_modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title">
+            Nouvelle liste
+          </p>
+          <span
+            class="material-symbols-outlined modal-close"
+            @click="show_new_list_modal = false"
+          >
+            close
+          </span>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description">
+            Créez une nouvelle liste pour enregistrer facilement vos tâches.
+          </p>
+
+          <input
+            placeholder="Nom de la liste"
+            x-model="new_list_name"
+            class="modal-input"
+          />
+        </div>
+        <div class="modal-footer">
+          <button
+            class="modal-button modal-button-secondary"
+            @click="() => {
+              show_new_list_modal = false;
+            }"
+          >
+            Annuler
+          </button>
+          <button
+            class="modal-button"
+            @click="() => {
+              if (new_list_name.trim().length > 0) {
+                show_new_list_modal = false;
+                create_new_list(new_list_name);
+
+                state.toast.visible = false;
+                state.toast.icon = 'check';
+                state.toast.text = 'Liste créée avec succès.';
+                state.toast.type = 'success';
+                setTimeout(() => {
+                  state.toast.visible = true;
+                }, 50);
+              }
+              else {
+                state.toast.visible = false;
+                state.toast.icon = 'error';
+                state.toast.text = 'La liste doit porter un nom.';
+                state.toast.type = 'danger';
+                setTimeout(() => {
+                  state.toast.visible = true;
+                }, 50);
+              }
+            }"
+          >
+            Créer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal edit_list-modal" x-show="show_edit_list_modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title">
+            Renommer la liste
+          </p>
+          <span
+            class="material-symbols-outlined modal-close"
+            @click="show_edit_list_modal = false"
+          >
+            close
+          </span>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description"
+            x-text="'Décidez d\'un nouveau nom pour la liste `' + state.tasks.find(task => task.id === current_editing_list_id).name + '`.'"
+          ></p>
+
+          <input
+            placeholder="Nom de la liste"
+            x-model="rename_list_name"
+            class="modal-input"
+          />
+        </div>
+        <div class="modal-footer">
+          <button
+            class="modal-button modal-button-secondary"
+            @click="() => {
+              show_edit_list_modal = false;
+            }"
+          >
+            Annuler
+          </button>
+          <button
+            class="modal-button"
+            @click="() => {
+              if (rename_list_name.trim().length > 0) {
+                show_edit_list_modal = false;
+                rename_list(current_editing_list_id, rename_list_name);
+
+                state.toast.icon = 'check';
+                state.toast.text = 'Liste renommée avec succès.';
+                state.toast.visible = false;
+                state.toast.type = 'success';
+                setTimeout(() => {
+                  state.toast.visible = true;
+                }, 50);
+              }
+              else {
+                state.toast.icon = 'error';
+                state.toast.text = 'La liste doit porter un nom.';
+                state.toast.visible = false;
+                state.toast.type = 'danger';
+                setTimeout(() => {
+                  state.toast.visible = true;
+                }, 50);
+              }
+            }"
+          >
+            Renommer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal edit_list-modal" x-show="show_delete_list_modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title">
+            Supprimer la liste
+          </p>
+          <span
+            class="material-symbols-outlined modal-close"
+            @click="show_delete_list_modal = false"
+          >
+            close
+          </span>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description"
+            x-text="'La liste `' + state.tasks.find(task => task.id === current_editing_list_id).name + '` sera supprimée.'"
+          ></p>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="modal-button modal-button-secondary"
+            @click="() => {
+              show_delete_list_modal = false;
+            }"
+          >
+            Annuler
+          </button>
+          <button
+            class="modal-button modal-button-destructive"
+            @click="() => {
+              show_delete_list_modal = false;
+              delete_list(current_editing_list_id);
+
+              state.toast.icon = 'delete';
+              state.toast.text = 'Liste supprimée avec succès.';
+              state.toast.visible = false;
+              state.toast.type = 'danger';
+              setTimeout(() => {
+                state.toast.visible = true;
+              }, 50);
+            }"
+          >
+            Supprimer
           </button>
         </div>
       </div>
@@ -116,10 +331,27 @@
       </div>
     </div>
     <div class="app">
-      <div class="tab tab1" x-show="currentTab === 1">
+      <div :class="{ 'fab': true, 'fab-new': true, 'visible': currentTab === 1 }"
+          @click="() => {
+            new_list_name = '';
+            show_new_list_modal = true;
+          }"
+        >
+          <span class="material-symbols-outlined">
+            add
+          </span>
+          <p>
+            Nouvelle liste
+          </p>
+        </div>
+
+      <div
+        class="tab tab1"
+        x-show="currentTab === 1"
+      >
         <h3
           class="tab-over-title"
-          x-text=" state.user ? 'Bonjour, ' + 
+          x-text=" (state.user && state.user.username) ? 'Bonjour, ' + 
           state.user.username + ' !' : 'Bonjour !' "
         ></h2>
         <h2 class="tab-title">
@@ -129,6 +361,28 @@
         <div class="ui-loading" x-show="!state.tasks_loaded || !state.user_loaded">
           <div class="spinner"></div>
           <p class="spinner-text">Chargement...</p>
+        </div>
+
+        <div class="empty-message" x-show="state.tasks_loaded && state.tasks.length === 0">
+          <p>
+            Vous n'avez pas encore créé de liste.<br/>
+            Créez-en une pour commencer.
+          </p>
+
+          <div class="button"
+            @click="() => {
+              new_list_name = '';
+              show_new_list_modal = true;
+            }"
+          >
+            <span class="material-symbols-outlined">
+              add
+            </span>
+
+            <p>
+              Nouvelle liste
+            </p>
+          </div>
         </div>
 
         <div class="list-header" x-show="state.tasks.length > 0">
@@ -154,12 +408,23 @@
                   ></p>
                 </div>
                 <div class="list-actions">
-                  <div class="button">
+                  <div class="button"
+                    @click="() => {
+                      current_editing_list_id = task.id;
+                      rename_list_name = task.name;
+                      show_edit_list_modal = true;
+                    }"
+                  >
                     <span class="material-symbols-outlined">
                       edit
                     </span>
                   </div>
-                  <div class="button">
+                  <div class="button"
+                    @click="() => {
+                      current_editing_list_id = task.id;
+                      show_delete_list_modal = true;
+                    }"
+                  >
                     <span class="material-symbols-outlined">
                       delete
                     </span>
@@ -169,21 +434,12 @@
             </template>
           </div>
         </template>
-
-        <div class="fab fab-new">
-          <span class="material-symbols-outlined">
-            add
-          </span>
-          <p>
-            Nouvelle liste
-          </p>
-        </div>
       </div>
 
       <div class="tab tab2" x-show="currentTab === 2">
         <h3
           class="tab-over-title"
-          x-text=" state.user ? 'Bonjour, ' + 
+          x-text=" (state.user && state.user.username) ? 'Bonjour, ' + 
           state.user.username + ' !' : 'Bonjour !' "
         ></h2>
         <h2 class="tab-title">
@@ -195,7 +451,7 @@
       <div class="tab tab3" x-show="currentTab === 3">
         <h3
           class="tab-over-title"
-          x-text=" state.user ? 'Bonjour, ' + 
+          x-text=" (state.user && state.user.username) ? 'Bonjour, ' + 
           state.user.username + ' !' : 'Bonjour !' "
         ></h2>
         <h2 class="tab-title">

@@ -15,6 +15,12 @@ function set_user(data) {
 }
 eel.expose(set_user);
 
+function set_loading_state(is_loading) {
+    // body.__x.$data.is_loading = is_loading;
+    mount('is_loading', is_loading);
+}
+eel.expose(set_loading_state);
+
 function set_tasks(data) {
     console.log(JSON.parse(data));
     tasks = JSON.parse(data);
@@ -26,6 +32,18 @@ function set_tasks(data) {
     mount('tasks_loaded', true);
 }
 eel.expose(set_tasks);
+
+function create_new_list(name) {
+    eel.create_new_list(name);
+}
+
+function rename_list(id, new_name) {
+    eel.rename_list(id, new_name);
+}
+
+function delete_list(id) {
+    eel.delete_list(id);
+}
 
 eel.get_user();
 eel.get_tasks();

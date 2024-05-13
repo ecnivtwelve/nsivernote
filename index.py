@@ -192,6 +192,39 @@ class User:
         # Retourne les tâches de l'utilisateur
         return tasks.data
 
+    def new_task(self, name):
+        """
+        Crée une nouvelle tâche pour l'utilisateur.
+        """
+        if self.supabase_obj is None:
+            # Si l'utilisateur n'est pas connecté
+            return None
+        # Requête base de données (INSERT INTO tasks VALUES (self.supabase_obj.user.id, name))
+        supabase.table('tasks').insert([{
+            'creator' : self.supabase_obj.user.id,
+            'name' : name,
+        }]).execute()
+
+    def rename_task(self, id, new_name):
+        """
+        Renomme une tâche de l'utilisateur.
+        """
+        if self.supabase_obj is None:
+            # Si l'utilisateur n'est pas connecté
+            return None
+        # Requête base de données (UPDATE tasks SET name = new_name WHERE id = id)
+        supabase.table('tasks').update({'name': new_name}).eq('id', id).execute()
+
+    def delete_task(self, id):
+        """
+        Supprime une tâche de l'utilisateur.
+        """
+        if self.supabase_obj is None:
+            # Si l'utilisateur n'est pas connecté
+            return None
+        # Requête base de données (DELETE FROM tasks WHERE id = id)
+        supabase.table('tasks').delete().eq('id', id).execute()
+
 # Variable de l'utilisateur actuel connecté (objet User)
 currentUser = None
 
@@ -226,8 +259,12 @@ def get_user():
     """
     # Utilisation de la variable globale currentUser
     global currentUser
+    # Affiche le chargement sur l'interface
+    eel.set_loading_state(True)
     # Retourne les données de l'utilisateur actuel
     eel.set_user(str(currentUser))
+    # Fin de chargement
+    eel.set_loading_state(False)
 
 @eel.expose
 def change_username(new_username):
@@ -236,8 +273,12 @@ def change_username(new_username):
     """
     # Utilisation de la variable globale currentUser
     global currentUser
+    # Affiche le chargement sur l'interface
+    eel.set_loading_state(True)
     # Met à jour le nom d'utilisateur
     currentUser.update({'username': new_username})
+    # Fin de chargement
+    eel.set_loading_state(False)
 
 @eel.expose
 def get_tasks():
@@ -246,9 +287,14 @@ def get_tasks():
     """
     # Utilisation de la variable globale currentUser
     global currentUser
+    # Affiche le chargement sur l'interface
+    eel.set_loading_state(True)
     # Retourne les tâches de l'utilisateur actuel
     tasks = currentUser.get_tasks()
+    # Envoie les tâches à l'interface
     eel.set_tasks(jsonpickle.encode(tasks))
+    # Fin de chargement
+    eel.set_loading_state(False)
 
 @eel.expose
 def get_task_list(req_id):
@@ -261,6 +307,48 @@ def get_task_list(req_id):
     tasks = TaskList()
     tasks.get_tasks(req_id)
     eel.set_task_list(str(tasks))
+
+@eel.expose
+def create_new_list(title):
+    """
+    (JS) Crée une nouvelle liste de tâches.
+    """
+    # Utilisation de la variable globale currentUser
+    global currentUser
+    # Affiche le chargement sur l'interface
+    eel.set_loading_state(True)
+    # Crée une nouvelle liste de tâches
+    currentUser.new_task(title)
+    # Met à jour les tâches de l'utilisateur actuel
+    get_tasks()
+
+@eel.expose
+def rename_list(id, new_name):
+    """
+    (JS) Renomme une liste de tâches.
+    """
+    # Utilisation de la variable globale currentUser
+    global currentUser
+    # Affiche le chargement sur l'interface
+    eel.set_loading_state(True)
+    # Renomme une liste de tâches
+    currentUser.rename_task(id, new_name)
+    # Met à jour les tâches de l'utilisateur actuel
+    get_tasks()
+
+@eel.expose
+def delete_list(id):
+    """
+    (JS) Supprime une liste de tâches.
+    """
+    # Utilisation de la variable globale currentUser
+    global currentUser
+    # Affiche le chargement sur l'interface
+    eel.set_loading_state(True)
+    # Supprime une liste de tâches
+    currentUser.delete_task(id)
+    # Met à jour les tâches de l'utilisateur actuel
+    get_tasks()
 
 # Lancement de l'application avec Eel
 eel.start('login.html', cmdline_args=['--disable-lcd-text'], size=(950, 680), position=(20, 20))

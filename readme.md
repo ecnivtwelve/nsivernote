@@ -1,14 +1,44 @@
+# Nsivernote
+Un logiciel de gestion de tâches pour un projet de NSI
+
+## Installation
+Pour installer les dépendances, il suffit de lancer la commande suivante :
+```bash
+pip install -r requirements.txt
+```
+
+## Exécution
+Pour lancer le programme, il suffit de lancer le fichier `index.py` avec Python 3.8 ou supérieur :
+```bash
+python3 index.py
+```
+
+## Compilation
+Vu que c'est un programme executable, une "compilation" est nécéssaire pour pouvoir l'utiliser indépendamment :
+```bash
+python3 -m eel index.py static --icon=icon.ico --onefile --noconsole
+```
+
 ## Cahier des charges
 
 ### UI
 - [x] Implémentation de l'interface graphique
 - [x] Changements de page
 
-##  Base de données
+## Base de données
 - [x] Se connnecter
 - [x] Créer un compte
 - [x] Modifier les données de profil
-- [ ] Ajouter une photo de profil (?)
+
+## Listes
+- [x] Créer une liste
+- [x] Renommer une liste
+- [x] Supprimer une liste
+- [x] Ajouter une tâche
+- [x] Renommer une tâche
+- [x] Supprimer une tâche
+- [x] Marquer une tâche comme faite
+- [x] Marquer une tâche comme non faite
 
 ## Développement
 

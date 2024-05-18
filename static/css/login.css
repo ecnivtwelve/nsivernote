@@ -1,3 +1,9 @@
+/* 
+login.css
+-----------------------
+Styles de la page de connexion
+*/
+
 .login-app {
     display: flex;
     flex-direction: column;

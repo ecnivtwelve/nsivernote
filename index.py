@@ -225,6 +225,16 @@ class User:
         # Requête base de données (DELETE FROM tasks WHERE id = id)
         supabase.table('tasks').delete().eq('id', id).execute()
 
+    def update_tasks(self, id, json_tasks):
+        """
+        Met à jour les tâches de l'utilisateur.
+        """
+        if self.supabase_obj is None:
+            # Si l'utilisateur n'est pas connecté
+            return None
+        # Requête base de données (UPDATE tasks SET json = json_tasks WHERE id = id)
+        supabase.table('tasks').update({'json': json_tasks}).eq('id', id).execute()
+
 # Variable de l'utilisateur actuel connecté (objet User)
 currentUser = None
 
@@ -347,6 +357,20 @@ def delete_list(id):
     eel.set_loading_state(True)
     # Supprime une liste de tâches
     currentUser.delete_task(id)
+    # Met à jour les tâches de l'utilisateur actuel
+    get_tasks()
+
+@eel.expose
+def update_tasks(id, json_tasks):
+    """
+    (JS) Met à jour les tâches de l'utilisateur actuel.
+    """
+    # Utilisation de la variable globale currentUser
+    global currentUser
+    # Affiche le chargement sur l'interface
+    eel.set_loading_state(True)
+    # Enregistre les nouvelles tâches
+    currentUser.update_tasks(id, json_tasks)
     # Met à jour les tâches de l'utilisateur actuel
     get_tasks()
 

@@ -8,6 +8,7 @@ pip install -r requirements.txt
 ```
 
 ## Exécution
+> Il est recommandé d'avoir le navigateur Google Chrome pour une meilleure compatibilité avec l'interface graphique.
 Pour lancer le programme, il suffit de lancer le fichier `index.py` avec Python 3.8 ou supérieur :
 ```bash
 python3 index.py

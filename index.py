@@ -2,6 +2,10 @@ import eel
 import jsonpickle
 from supabase import create_client, Client
 
+# -----------------------------------------------
+# Les fonctions et fichiers concernant l'interface graphique sont situés dans le dossier /static
+# -----------------------------------------------
+
 # Variables de connexion à la base de données à distance Supabase (devrait pas être exposé dans le code, mais pour les besoins d'un petit projet, on le laisse ici)
 SUPABASE_URL = "https://cjxferfvtfodvzonnqyk.supabase.co"
 API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNqeGZlcmZ2dGZvZHZ6b25ucXlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTEzNzI0MDQsImV4cCI6MjAyNjk0ODQwNH0.Yo_cwzRX5y_wQH08aQ57NnKw_KXgHajvfQ1Qk_Q6y_Q"

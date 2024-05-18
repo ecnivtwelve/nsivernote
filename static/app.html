@@ -41,6 +41,9 @@
         current_editing_list_id: null,
         show_edit_list_modal: false,
         show_delete_list_modal: false,
+        show_list_page: false,
+        list_page_id: 0,
+        new_task_name: '',
       }
     "
     @mounted="state[$event.detail.name] = $event.detail.data"
@@ -53,6 +56,89 @@
 
     <div :class="{ 'ui-loading-bar': true, 'visible': state.is_loading }">
       <div class="ui-loading-inner"></div>
+    </div>
+
+    <div :class="{'page':true,  'list-page': true, 'visible': show_list_page }">
+      <div class="page-header">
+        <div class="page-back" @click="show_list_page = false">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </div>
+        <p class="page-title"
+          x-text="state.tasks.find(task => task.id === list_page_id).name"
+        ></p>
+      </div>
+
+      <div class="page-content">
+        <div class="list tasks-list-modal">
+          <template x-for="(task, index) in state.tasks.find(task => task.id === list_page_id).json" :key="task.id">
+            <div :class="{ 'list-item': true, 'no-hover': true, 'item-checked': task.checked }">
+              <div class="list-leading">
+                <div class="task-checkbox" @click="() => {
+                  task.checked = !task.checked;
+
+                  update_list_json(list_page_id, state.tasks.find(task => task.id === list_page_id).json);
+                }">
+                  <div :class="{ 'task-checkbox-check': true, 'checked': task.checked }">
+                    <span class="material-symbols-outlined">check</span>
+                  </div>
+                </div>
+              </div>
+              <div class="list-content">
+                <input
+                  class="list-modal-input"
+                  placeholder="Tâche"
+                  x-model="task.name"
+                  @blur="() => {
+                    if (task.name.trim().length === 0) {
+                      state.tasks.find(task => task.id === list_page_id).json.splice(index, 1);
+
+                      update_list_json(list_page_id, state.tasks.find(task => task.id === list_page_id).json);
+                    }
+                  }"
+                />
+              </div>
+              <div class="list-actions">
+                <div class="button"
+                  @click="() => {
+                    state.tasks.find(task => task.id === list_page_id).json.splice(index, 1);
+
+                    update_list_json(list_page_id, state.tasks.find(task => task.id === list_page_id).json);
+                  }"
+                >
+                  <span class="material-symbols-outlined">delete</span>
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <div class="list-item item-input-cont no-hover">
+            <div class="list-leading">
+              <span class="material-symbols-outlined">add</span>
+            </div>
+
+            <div class="list-content">
+              <input
+                class="list-modal-input"
+                placeholder="Nouvelle tâche"
+                x-model="new_task_name"
+                @keydown.enter="() => {
+                  if (new_task_name.trim().length > 0) {
+                    state.tasks.find(task => task.id === list_page_id).json.push({
+                      id: Math.random().toString(36).substring(7),
+                      name: new_task_name,
+                      checked: false
+                    });
+
+                    update_list_json(list_page_id, state.tasks.find(task => task.id === list_page_id).json);
+
+                    new_task_name = '';
+                  }
+                }"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="modal username-modal" x-show="show_username_modal">
@@ -308,12 +394,6 @@
           </span>
           <p>Mes listes</p>
         </div>
-        <div x-on:click="currentTab = 2" :class="{ 'active': currentTab === 2 }" class="menu-item">
-          <span class="material-symbols-outlined">
-            group
-          </span>
-          <p>Partagé avec moi</p>
-        </div>
         <div class="menu-tab-group-title">
           <p>Mon profil</p>
         </div>
@@ -391,20 +471,35 @@
         <template x-if="state.tasks.length > 0">
           <div class="list tasks-list">
             <template x-for="(task, index) in state.tasks" :key="task.id">
-              <div class="list-item" x-if="task.name">
-                <div class="list-leading">
+              <div class="list-item" x-if="task.name"
+              >
+                <div class="list-leading"
+                  @click="() => {
+                    show_list_page = true;
+                    list_page_id = task.id;
+                  }"
+                >
                   <span class="material-symbols-outlined">
                     format_list_bulleted
                   </span>
                 </div>
-                <div class="list-content">
+                <div class="list-content"
+                  @click="() => {
+                    show_list_page = true;
+                    list_page_id = task.id;
+                  }"
+                >
                   <p
                     class="list-title"
                     x-text="task.name"
                   ></p>
                   <p
                     class="list-description"
-                    x-text="task.json.length > 0 ? task.json.length + ' tâches' : 'Aucune tâche'"
+                    x-text="
+                      task.json.length > 0 ?
+                        task.json.length + ' tâche' + (task.json.length > 1 ? 's' : '') + ', ' + task.json.filter(task => task.checked).length + ' terminées'
+                      : 'Aucune tâche'
+                    "
                   ></p>
                 </div>
                 <div class="list-actions">
@@ -481,6 +576,28 @@
               >
                 <span class="material-symbols-outlined">
                   edit
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="list-leading">
+              <span class="material-symbols-outlined">
+                logout
+              </span>
+            </div>
+            <div class="list-content">
+              <p class="list-title">Déconnexion</p>
+              <p class="list-description">Se déconnecter de votre compte</p>
+            </div>
+            <div class="list-actions">
+              <div class="button"
+                @click="() => {
+                  window.location.href = 'login.html?logout=true';
+                }"
+              >
+                <span class="material-symbols-outlined">
+                  logout
                 </span>
               </div>
             </div>

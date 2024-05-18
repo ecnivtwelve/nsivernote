@@ -76,3 +76,8 @@
 - Amélioration de l'interface (chargements, toasts, etc...)
 - Fix d'un bug avec le scroll vertical sur l'interface
 - Ajout d'un grand nombre d'animations sur l'interface
+
+#### 18 mai 2024
+- Ajout de l'interface des listes
+- Création, édition et suppression de tâches
+- Bugs mineurs corrigés

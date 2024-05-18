@@ -45,5 +45,9 @@ function delete_list(id) {
     eel.delete_list(id);
 }
 
+function update_list_json(id, json_tasks) {
+    eel.update_tasks(id, json_tasks);
+}
+
 eel.get_user();
 eel.get_tasks();

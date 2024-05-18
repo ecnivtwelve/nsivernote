@@ -27,11 +27,15 @@ function signupUser() {
 }
 
 function login_error(text) {
-    mount('loginError', text);
+    mount('loginError', 'Erreur inconnue (' + text + ')');
     mount('loading', false);
 
     if (text.trim() == 'Invalid login credentials') {
         mount('loginError', "Identifiants incorrects.");
+    }
+
+    if (text.trim() == 'You must provide either an email or phone number and a password') {
+        mount('loginError', "Vous devez fournir un email ou un numéro de téléphone et un mot de passe.");
     }
 }
 
